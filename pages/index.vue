@@ -3,6 +3,7 @@
     <Navbar/>
     <Dashboard/>
     <JoinCompany/>
+    <HowItWork/>
     </section>
 </template>
 
