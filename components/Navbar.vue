@@ -1,10 +1,13 @@
 <script setup>
 import { ref, computed } from "vue";
 import axios from "axios";
+import { useRouter } from 'vue-router';
 
 // Modal visibility
 const loginModal = ref(false);
 const signupModal = ref(false);
+// router
+const router = useRouter();
 
 // Form data
 const loginFormData = ref({
@@ -82,13 +85,19 @@ const isSignupFormValid = computed(() => {
 });
 
 // Handle form submissions
-const LoginSubmitForm = () => {
+const LoginSubmitForm = async () => {
   try {
-    axios.post("login", loginFormData.value).then((response) => {
-      console.log(response.data);
-    });
+    const response = await axios.post("login", loginFormData.value);
+    console.log("Success:", response.data.data);
+    if (response) {
+      // Store token in local storage
+      localStorage.setItem("authToken", response.data.data.token);
+
+          // Redirect to 'jobs' page
+      router.push("/jobs");
+    }
   } catch (error) {
-    console.log(error);
+    console.error("Error:", error);
   }
 };
 
