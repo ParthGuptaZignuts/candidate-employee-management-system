@@ -1,6 +1,8 @@
 <template>
     <section>
     <Navbar/>
+    <Dashboard/>
+    <JoinCompany/>
     </section>
 </template>
 
