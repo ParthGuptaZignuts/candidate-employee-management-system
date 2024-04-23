@@ -14,6 +14,7 @@ const form = ref(null);
 
 // Form validity tracking
 const isFormValid = ref(false);
+const jobApplicationStatus = ref({});
 
 // Track if all required fields are filled
 const isSubmitEnabled = computed(() => {
@@ -24,6 +25,7 @@ const handleLogout = () => {
   if (process.client) {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("appliedJobs");
   }
   router.push("/");
 };
@@ -92,6 +94,7 @@ const submitApplication = async () => {
             },
           }
         );
+        jobApplicationStatus.value[job_descriptions_id] = true;
         console.log("Application submitted successfully");
         closeDialog();
       } catch (error) {
@@ -104,14 +107,26 @@ const submitApplication = async () => {
 onMounted(() => {
   if (process.client) {
     email.value = localStorage.getItem("userEmail") || "";
+    // Retrieve applied jobs from local storage
+    const appliedJobs = localStorage.getItem("appliedJobs");
+    if (appliedJobs) {
+      jobApplicationStatus.value = JSON.parse(appliedJobs);
+    }
   }
   fetchCompanyInfo();
   fetchJobsWithCompany();
 });
 
-watch([email, resume], () => {
-  isFormValid.value = isSubmitEnabled.value; // Update form validity
-});
+// Save the applied jobs to local storage when the state changes
+watch(
+  jobApplicationStatus,
+  (newVal) => {
+    if (process.client) {
+      localStorage.setItem("appliedJobs", JSON.stringify(newVal));
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -234,6 +249,7 @@ watch([email, resume], () => {
                     color="primary"
                     class="apply-button"
                     @click="handleApply(job.id)"
+                    :disabled="jobApplicationStatus[job.id]"
                   >
                     APPLY
                   </v-btn>
