@@ -88,10 +88,10 @@ const isSignupFormValid = computed(() => {
 const LoginSubmitForm = async () => {
   try {
     const response = await axios.post("login", loginFormData.value);
-    console.log("Success:", response.data.data);
     if (response) {
       // Store token in local storage
       localStorage.setItem("authToken", response.data.data.token);
+      localStorage.setItem("userEmail",response.data.data.user.email);
 
           // Redirect to 'jobs' page
       router.push("/jobs");

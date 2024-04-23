@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
@@ -7,17 +7,32 @@ const router = useRouter();
 const companyOptions = ref([]);
 const isLoading = ref(false);
 const jobsOptions = ref([]);
+const applyDialog = ref(false);
+const email = ref("");
+const resume = ref(null);
+const form = ref(null);
+
+// Form validity tracking
+const isFormValid = ref(false);
+
+// Track if all required fields are filled
+const isSubmitEnabled = computed(() => {
+  return email.value.trim() !== "" && resume.value !== null;
+});
 
 const handleLogout = () => {
-  localStorage.removeItem("authToken");
+  if (process.client) {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userEmail");
+  }
   router.push("/");
 };
 
 const fetchCompanyInfo = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get("/companyinfo");
-    const companies = response.data.data;
-    companyOptions.value = companies.map((company) => ({
+    companyOptions.value = response.data.data.map((company) => ({
       name: company.name,
       logo: `http://127.0.0.1:8000/storage/logos/${company.logo}`,
     }));
@@ -28,23 +43,74 @@ const fetchCompanyInfo = async () => {
   }
 };
 
-const fetchJobsWitCompany = async () => {
+const fetchJobsWithCompany = async () => {
   try {
     const response = await axios.get("/jobsInfo");
     jobsOptions.value = response.data;
-    console.log(jobsOptions.value);
   } catch (error) {
     console.error("Error fetching jobs:", error);
   }
 };
 
-const handleApply = (id) =>{
-  console.log(id);
-} 
+const dialogClear = () => {
+  resume.value = null;
+};
+
+const closeDialog = () => {
+  applyDialog.value = false;
+  dialogClear();
+};
+
+const handleApply = (id) => {
+  applyDialog.value = true;
+  if (process.client) {
+    localStorage.setItem("jobId", id);
+  }
+};
+
+const submitApplication = async () => {
+  if (form.value) {
+    const isValid = await form.value.validate();
+    const job_descriptions_id = localStorage.getItem("jobId");
+    if (isValid) {
+      const formData = new FormData();
+      formData.append("email", email.value);
+      formData.append("job_descriptions_id", job_descriptions_id);
+      formData.append("resume", resume.value);
+
+      // Token handling
+      const token = localStorage.getItem("authToken") || "";
+
+      try {
+        await axios.post(
+          "/userJobDetails",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              "Authorization": `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Application submitted successfully");
+        closeDialog();
+      } catch (error) {
+        console.error("Error submitting application:", error);
+      }
+    }
+  }
+};
 
 onMounted(() => {
+  if (process.client) {
+    email.value = localStorage.getItem("userEmail") || "";
+  }
   fetchCompanyInfo();
-  fetchJobsWitCompany();
+  fetchJobsWithCompany();
+});
+
+watch([email, resume], () => {
+  isFormValid.value = isSubmitEnabled.value; // Update form validity
 });
 </script>
 
@@ -131,10 +197,12 @@ onMounted(() => {
                 <v-card-subtitle>
                   <v-row no-gutters align="center">
                     <v-col cols="6">
-                      <v-icon>mdi-sort-calendar-ascending</v-icon> {{ job.posted_date }}
+                      <v-icon>mdi-sort-calendar-ascending</v-icon
+                      >{{ job.posted_date }}
                     </v-col>
                     <v-col cols="6">
-                      <v-icon>mdi-sort-calendar-descending</v-icon> {{ job.expiry_date }}
+                      <v-icon>mdi-sort-calendar-descending</v-icon
+                      >{{ job.expiry_date }}
                     </v-col>
                   </v-row>
                 </v-card-subtitle>
@@ -176,6 +244,48 @@ onMounted(() => {
         </v-col>
       </v-row>
     </v-container>
+
+    <!-- Apply dialog -->
+    <v-dialog v-model="applyDialog" max-width="400" persistent>
+      <v-card>
+        <v-card-title>Apply for Job</v-card-title>
+  
+        <v-card-text>
+          <!-- Form with validation -->
+          <v-form ref="form" v-model="isFormValid" lazy-validation>
+            <!-- Email field with validation -->
+            <v-text-field
+              v-model="email"
+              label="Email"
+              disabled
+              required
+            />
+  
+            <!-- File input field with validation -->
+            <v-file-input
+              v-model="resume"
+              label="Upload Resume"
+              required
+              accept=".pdf,.doc,.docx"
+            />
+          </v-form>
+        </v-card-text>
+  
+        <v-card-actions>
+          <!-- Cancel button -->
+          <v-btn text @click="closeDialog">Cancel</v-btn>
+  
+          <!-- Apply button with correct validation -->
+          <v-btn
+            color="primary"
+            @click="submitApplication"
+            :disabled="!isSubmitEnabled" 
+          >
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
