@@ -27,7 +27,10 @@ const handleLogout = () => {
     localStorage.removeItem("userEmail");
     localStorage.removeItem("appliedJobs");
   }
-  router.push("/");
+  useNuxtApp().$toast.success("LogOut Successfully...");
+  setTimeout(function(){
+    router.push("/");
+  },1500);
 };
 
 const fetchCompanyInfo = async () => {
@@ -95,9 +98,10 @@ const submitApplication = async () => {
           }
         );
         jobApplicationStatus.value[job_descriptions_id] = true;
-        console.log("Application submitted successfully");
+        useNuxtApp().$toast.success("Application submitted successfully");
         closeDialog();
       } catch (error) {
+        useNuxtApp().$toast.error("You have already apply for this job");
         console.error("Error submitting application:", error);
       }
     }

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import axios from "axios";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 // Modal visibility
 const loginModal = ref(false);
@@ -91,13 +91,16 @@ const LoginSubmitForm = async () => {
     if (response) {
       // Store token in local storage
       localStorage.setItem("authToken", response.data.data.token);
-      localStorage.setItem("userEmail",response.data.data.user.email);
-
-          // Redirect to 'jobs' page
-      router.push("/jobs");
+      localStorage.setItem("userEmail", response.data.data.user.email);
+      // Redirect to 'jobs' page
+      useNuxtApp().$toast.success("Login In ...");
+      setTimeout(function () {
+        router.push("/jobs");
+      }, 1500);
     }
   } catch (error) {
-    console.error("Error:", error);
+    useNuxtApp().$toast.error("An Error Occurred...");
+    console.error("Error:", Error);
   }
 };
 
@@ -105,7 +108,7 @@ const LoginSubmitForm = async () => {
 const SignupSubmitForm = async () => {
   try {
     const response = await axios.post("register", signupFormData.value);
-    console.log("Success:", response.data);
+    useNuxtApp().$toast.success("Successfully Registered...");
     if (response) {
       SignupResetForm();
       setTimeout(() => {
@@ -113,6 +116,7 @@ const SignupSubmitForm = async () => {
       }, 1500);
     }
   } catch (error) {
+    useNuxtApp().$toast.error("Error Occurred while Registring...");
     console.error("Error:", error);
   }
 };
