@@ -191,7 +191,7 @@ watch(
               lg="4"
               class="mb-4"
             >
-              <v-card class="job-card" elevation="3" hover>
+              <v-card class="job-card h-100" elevation="3" hover>
                 <!-- Company and Job Information -->
                 <v-card-title>
                   <v-row no-gutters align="center">
