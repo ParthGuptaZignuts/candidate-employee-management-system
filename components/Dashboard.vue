@@ -1,3 +1,8 @@
+<script setup>
+const browseAction =()=>{
+  useNuxtApp().$toast.warning("Please Login to See More...");
+}
+</script>
 <template>
     <div class="background-image-container">
       <v-container fluid>
@@ -25,6 +30,7 @@
               large
               dark
               elevation="2"
+              @click="browseAction"
             >
               Browse Jobs
             </v-btn>

@@ -17,6 +17,9 @@ const fetchCompanyNames = async () => {
     isLoading.value = false;
   }
 };
+const showMore = ()=>{
+  useNuxtApp().$toast.warning("Please Login to See More...")
+}
 
 // Call fetchCompanyNames when component is mounted
 onMounted(fetchCompanyNames);
