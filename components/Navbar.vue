@@ -92,6 +92,7 @@ const LoginSubmitForm = async () => {
       // Store token in local storage
       localStorage.setItem("authToken", response.data.data.token);
       localStorage.setItem("userEmail", response.data.data.user.email);
+      localStorage.setItem("user_id", response.data.data.user.id);
       // Redirect to 'jobs' page
       useNuxtApp().$toast.success("Login In ...");
       setTimeout(function () {

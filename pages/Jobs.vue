@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import axois from "~/plugins/axois";
 
 const router = useRouter();
 const companyOptions = ref([]);
@@ -11,6 +12,8 @@ const applyDialog = ref(false);
 const email = ref("");
 const resume = ref(null);
 const form = ref(null);
+const myjobStatusDialog = ref(false);
+const jobStatus = ref([]);
 
 // Form validity tracking
 const isFormValid = ref(false);
@@ -21,16 +24,25 @@ const isSubmitEnabled = computed(() => {
   return email.value.trim() !== "" && resume.value !== null;
 });
 
+const openMyJobStatusDailog = () => {
+  myjobStatusDialog.value = true;
+};
+
+const closeMyJobStatusDailog = () => {
+  myjobStatusDialog.value = false;
+};
+
 const handleLogout = () => {
   if (process.client) {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userEmail");
     localStorage.removeItem("appliedJobs");
+    localStorage.removeItem("user_id");
   }
   useNuxtApp().$toast.success("LogOut Successfully...");
-  setTimeout(function(){
+  setTimeout(function () {
     router.push("/");
-  },1500);
+  }, 1500);
 };
 
 const fetchCompanyInfo = async () => {
@@ -54,6 +66,27 @@ const fetchJobsWithCompany = async () => {
     jobsOptions.value = response.data;
   } catch (error) {
     console.error("Error fetching jobs:", error);
+  }
+};
+
+const fetchJobStatus = async () => {
+  try {
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+      console.error("User ID not found in local storage");
+      return;
+    }
+
+    const response = await axios.get("/jobsStatus", {
+      params: {
+        user_id: userId,
+      },
+    });
+
+    jobStatus.value = response.data;
+    console.log(jobStatus.value);
+  } catch (error) {
+    console.error("Error fetching job status:", error);
   }
 };
 
@@ -87,16 +120,12 @@ const submitApplication = async () => {
       const token = localStorage.getItem("authToken") || "";
 
       try {
-        await axios.post(
-          "/userJobDetails",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              "Authorization": `Bearer ${token}`,
-            },
-          }
-        );
+        await axios.post("/userJobDetails", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         jobApplicationStatus.value[job_descriptions_id] = true;
         useNuxtApp().$toast.success("Application submitted successfully");
         closeDialog();
@@ -119,6 +148,7 @@ onMounted(() => {
   }
   fetchCompanyInfo();
   fetchJobsWithCompany();
+  fetchJobStatus();
 });
 
 // Save the applied jobs to local storage when the state changes
@@ -151,37 +181,88 @@ watch(
           <p class="loading-text">Loading company information...</p>
         </v-col>
 
-        <v-col v-else cols="2" class="company-list">
-          <v-card class="company-card">
-            <v-list dense>
-              <v-list-subheader>COMPANIES WORKING WITH US</v-list-subheader>
-              <v-divider />
-              <v-list-item
-                v-for="(company, index) in companyOptions"
-                :key="index"
-                class="company-item"
-              >
-                <v-list-item-avatar>
-                  <v-img
-                    :src="company.logo"
-                    class="round-logo"
-                    height="40"
-                    width="40"
-                    cover
-                  />
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title class="company-name">
-                    {{ company.name }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-card>
+        <v-col v-else cols="2">
+          <v-list dense>
+            <v-list-subheader>Companies Working With Us</v-list-subheader>
+            <v-divider />
+
+            <v-list-item
+              v-for="(company, index) in companyOptions"
+              :key="index"
+              class="d-flex company-list-item"
+            >
+              <!-- Align avatar and title -->
+              <v-list-item-avatar>
+                <v-img
+                  :src="company.logo"
+                  class="company-avatar"
+                  height="40"
+                  width="40"
+                  cover
+                />
+              </v-list-item-avatar>
+
+              <v-list-item-content class="company-list-content">
+                <v-list-item-title class="company-name">{{
+                  company.name
+                }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-col>
 
         <!-- Job Cards -->
         <v-col cols="10" class="job-list">
+          <v-row>
+            <v-col>
+              <div class="demo-space-x float-right">
+                <VBtn color="info" @click="openMyJobStatusDailog">
+                  My Job Status
+                </VBtn>
+              </div>
+            </v-col>
+          </v-row>
+
+          <VDialog
+            v-model="myjobStatusDialog"
+            fullscreen
+            :scrim="false"
+            transition="dialog-bottom-transition"
+            class="my-job-status-dialog"
+          >
+            <!-- Dialog Content -->
+            <VCard>
+              <!-- Toolbar -->
+              <div>
+                <VToolbar color="primary">
+                  <VBtn icon variant="plain" @click="closeMyJobStatusDailog">
+                    <VIcon color="white" icon="mdi mdi-close-circle" />
+                  </VBtn>
+
+                  <VToolbarTitle class="text-h5">My Job Status</VToolbarTitle>
+                  <VSpacer />
+                </VToolbar>
+              </div>
+
+              <div>
+                <V-row dense>
+                  <v-col 
+                  v-for="(status , index) in jobStatus"
+                  :key="index"
+                  cols=12
+                  md="6"
+                  lg="4">
+                  <v-card>
+                    <v-card-title >Position Applied For : {{status.job_title}}</v-card-title>
+                    <v-card-subtitle >Company Applied In : {{status.company_name}}</v-card-subtitle>
+                    <v-card-subtitle >Current Status :  {{status.status}}</v-card-subtitle>
+                  </v-card>
+                  </v-col>
+                </V-row>
+              </div>
+            </VCard>
+          </VDialog>
+
           <v-row dense>
             <v-col
               v-for="(job, index) in jobsOptions"
@@ -269,18 +350,13 @@ watch(
     <v-dialog v-model="applyDialog" max-width="400" persistent>
       <v-card>
         <v-card-title>Apply for Job</v-card-title>
-  
+
         <v-card-text>
           <!-- Form with validation -->
           <v-form ref="form" v-model="isFormValid" lazy-validation>
             <!-- Email field with validation -->
-            <v-text-field
-              v-model="email"
-              label="Email"
-              disabled
-              required
-            />
-  
+            <v-text-field v-model="email" label="Email" disabled required />
+
             <!-- File input field with validation -->
             <v-file-input
               v-model="resume"
@@ -290,16 +366,16 @@ watch(
             />
           </v-form>
         </v-card-text>
-  
+
         <v-card-actions>
           <!-- Cancel button -->
           <v-btn text @click="closeDialog">Cancel</v-btn>
-  
+
           <!-- Apply button with correct validation -->
           <v-btn
             color="primary"
             @click="submitApplication"
-            :disabled="!isSubmitEnabled" 
+            :disabled="!isSubmitEnabled"
           >
             Submit
           </v-btn>
@@ -310,57 +386,59 @@ watch(
 </template>
 
 <style scoped>
-.company-list {
-  padding: 16px;
-  background-color: #f0f5fa;
-}
-
-.company-card {
-  padding: 10px;
-  background-color: white;
-}
-
-.company-item {
-  padding: 10px;
-  transition: background-color 0.2s;
-}
-
-.company-item:hover {
-  background-color: #e0f7fa;
-}
-
-.round-logo {
+.company-avatar {
   border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.company-list-item {
+  transition: background-color 0.3s;
+  padding: 12px 16px; /* Slight padding for better alignment */
+  cursor: pointer;
+}
+
+.company-list-item:hover {
+  background-color: #e3f2fd; /* Subtle hover effect */
+}
+
+.company-list-content {
+  margin-left: 8px; /* Ensure text has a small margin from avatar */
 }
 
 .company-name {
-  color: #3f51b5;
   font-weight: bold;
+  color: #3f51b5; /* Primary color for the name */
+  transition: all 0.3s;
 }
 
+.company-list-item:hover .company-name {
+  color: #1a237e; /* Darker shade on hover */
+}
+
+/* Job list styling */
 .job-list {
   padding: 16px;
 }
 
+/* Job cards with subtle hover effect */
 .job-card {
   transition: box-shadow 0.3s;
   border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .job-card:hover {
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
 }
 
+/* Job title with specific color */
 .job-title {
   color: #3f51b5;
   font-weight: bold;
 }
 
+/* Apply button uppercase styling */
 .apply-button {
   text-transform: uppercase;
-}
-
-.mb-4 {
-  margin-bottom: 16px;
 }
 </style>
