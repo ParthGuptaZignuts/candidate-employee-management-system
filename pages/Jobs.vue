@@ -168,7 +168,7 @@ watch(
 </script>
 
 <template>
-  <v-app style="background-color:#f0f5fa ;">
+  <v-app style="background-color: #f0f5fa">
     <!-- navbar section starts -->
     <nav class="navbar">
       <div class="logo">
@@ -182,7 +182,7 @@ watch(
     </nav>
     <!-- navbar section ends  -->
 
-  <v-container fluid>
+    <v-container fluid>
       <v-row>
         <!-- Company List -->
         <v-col cols="12" v-if="isLoading" class="text-center loading-section">
@@ -192,8 +192,10 @@ watch(
 
         <!-- vlist section starts -->
         <v-col v-if="!isLoading" cols="2">
-          <v-list nav :lines="false" style="background-color:transparent">
-            <v-list-header class="font-weight-black">Companies Associated with Us</v-list-header>
+          <v-list nav :lines="false" style="background-color: transparent">
+            <v-list-header class="font-weight-black"
+              >Companies Associated with Us</v-list-header
+            >
             <v-divider />
 
             <v-list-item
@@ -202,7 +204,13 @@ watch(
               class="company-list-item"
             >
               <template #prepend>
-                <v-img :src="company.logo" contain height="40" width="40" class="company-avatar" />
+                <v-img
+                  :src="company.logo"
+                  contain
+                  height="40"
+                  width="40"
+                  class="company-avatar"
+                />
               </template>
 
               <v-list-item-title class="company-name text-uppercase">
@@ -212,14 +220,18 @@ watch(
           </v-list>
         </v-col>
         <!-- vlist section ends -->
-        
- 
+
         <v-col cols="10" class="job-list">
           <!-- my job button -->
-          <v-row>
+          <v-row class="mb-1">
             <v-col>
               <div class="demo-space-x float-right">
-                <VBtn variant="tonal"   rounded="lg" color="primary" @click="openMyJobStatusDailog">
+                <VBtn
+                  variant="tonal"
+                  rounded="lg"
+                  color="primary"
+                  @click="openMyJobStatusDailog"
+                >
                   My Job Status
                 </VBtn>
               </div>
@@ -302,7 +314,7 @@ watch(
               </div>
             </VCard>
           </VDialog>
-           <!-- vdialog for showing jobs status ends-->
+          <!-- vdialog for showing jobs status ends-->
 
           <v-row dense>
             <v-col
@@ -313,11 +325,11 @@ watch(
               lg="4"
               class="mb-4"
             >
-              <v-card class="job-card h-100 rounded-xl mx-auto"  hover>
+              <v-card class="job-card h-100 rounded-xl mx-auto" hover>
                 <!-- Company and Job Information -->
                 <v-card-title>
                   <v-row no-gutters align="center" class="mt-2">
-                    <v-col cols="2" class="pl-8" >
+                    <v-col cols="2" class="pl-8">
                       <v-img
                         :src="`http://127.0.0.1:8000/storage/logos/${job.company.logo}`"
                         class="company-avatar"
@@ -329,7 +341,7 @@ watch(
                     <v-col cols="7" class="company-name-title">
                       {{ job.company.name }}
                     </v-col>
-                    <v-col cols="3" class="text-uppercase font-weight-light" >
+                    <v-col cols="3" class="text-uppercase font-weight-light">
                       <v-icon>mdi-map-marker</v-icon>{{ job.company.address }}
                     </v-col>
                   </v-row>
@@ -337,6 +349,7 @@ watch(
 
                 <v-divider></v-divider>
 
+                <!-- posted on expiry on  -->
                 <v-card-subtitle>
                   <v-row no-gutters align="center" class="mt-3">
                     <v-col cols="5" class="pl-10">
@@ -352,10 +365,23 @@ watch(
                 <v-card-text>
                   <h1 class="job-title">{{ job.title }}</h1>
                   <v-row>
-                    <v-col cols="6">Type: {{ job.employment_type }}</v-col>
-                    <v-col cols="6">
-                      Skills Required: {{ job.skills_required }}
+                    <!-- job employment type -->
+                    <v-col cols="6" class="mt-2 pl-12">
+                      <div class="demo-space-x">
+                        <VChip color="success">
+                          {{ job.employment_type }}
+                        </VChip>
+                      </div></v-col
+                    >
+                    <!-- skills required -->
+                    <v-col cols="6" class="mt-2 pl-10">
+                      <div class="demo-space-x">
+                        <VChip :label="false" color="primary">
+                          {{ job.skills_required }}
+                        </VChip>
+                      </div>
                     </v-col>
+
                   </v-row>
                   <v-row>
                     <v-col cols="12">
@@ -427,7 +453,6 @@ watch(
 </template>
 
 <style scoped>
-
 /* navbar styling starts */
 .navbar {
   display: flex;
@@ -458,28 +483,28 @@ watch(
   transition: background-color 0.3s;
   padding: 12px 16px;
   cursor: pointer;
-  align-items: center; 
+  align-items: center;
 }
 
 .company-list-item:hover {
-  background-color: #e3f2fd; 
+  background-color: #e3f2fd;
 }
 
 .company-name {
   font-weight: bold;
-  color: #3f51b5; 
+  color: #3f51b5;
   padding-left: 10px;
   transition: all 0.3s;
 }
 
-.company-name-title{
+.company-name-title {
   font-weight: bold;
   font-size: 35px;
-  color:#070707;
+  color: #070707;
 }
 
 .company-name:hover {
-  color: #1a237e; 
+  color: #1a237e;
 }
 
 /* Job list styling */
@@ -500,8 +525,9 @@ watch(
 
 /* Job title with specific color */
 .job-title {
-  color: #3f51b5;
+  color: rgb(53, 46, 53);
   font-weight: bold;
+  padding-left: 40px;
 }
 
 /* Apply button uppercase styling */
