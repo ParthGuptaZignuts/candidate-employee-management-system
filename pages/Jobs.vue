@@ -374,7 +374,7 @@ watch(
                       </div></v-col
                     >
                     <!-- skills required -->
-                    <v-col cols="6" class="mt-2 pl-10">
+                    <v-col cols="6" class="mt-2 pl-3">
                       <div class="demo-space-x">
                         <VChip :label="false" color="primary">
                           {{ job.skills_required }}
