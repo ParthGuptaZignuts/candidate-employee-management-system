@@ -168,7 +168,7 @@ watch(
 </script>
 
 <template>
-  <v-app>
+  <v-app style="background-color:#f0f5fa ;">
     <!-- navbar section starts -->
     <nav class="navbar">
       <div class="logo">
@@ -182,7 +182,7 @@ watch(
     </nav>
     <!-- navbar section ends  -->
 
-    <v-container fluid>
+  <v-container fluid>
       <v-row>
         <!-- Company List -->
         <v-col cols="12" v-if="isLoading" class="text-center loading-section">
@@ -192,8 +192,8 @@ watch(
 
         <!-- vlist section starts -->
         <v-col v-if="!isLoading" cols="2">
-          <v-list nav :lines="false">
-            <v-list-header>Companies Associated with Us</v-list-header>
+          <v-list nav :lines="false" style="background-color:transparent">
+            <v-list-header class="font-weight-black">Companies Associated with Us</v-list-header>
             <v-divider />
 
             <v-list-item
@@ -212,19 +212,22 @@ watch(
           </v-list>
         </v-col>
         <!-- vlist section ends -->
-
-        <!-- Job Cards -->
+        
+ 
         <v-col cols="10" class="job-list">
+          <!-- my job button -->
           <v-row>
             <v-col>
               <div class="demo-space-x float-right">
-                <VBtn color="info" @click="openMyJobStatusDailog">
+                <VBtn variant="tonal"   rounded="lg" color="primary" @click="openMyJobStatusDailog">
                   My Job Status
                 </VBtn>
               </div>
             </v-col>
           </v-row>
+          <!-- my job button ends -->
 
+          <!-- vdialog for showing jobs status starts-->
           <VDialog
             v-model="myjobStatusDialog"
             fullscreen
@@ -299,6 +302,7 @@ watch(
               </div>
             </VCard>
           </VDialog>
+           <!-- vdialog for showing jobs status ends-->
 
           <v-row dense>
             <v-col
@@ -309,37 +313,37 @@ watch(
               lg="4"
               class="mb-4"
             >
-              <v-card class="job-card h-100" elevation="3" hover>
+              <v-card class="job-card h-100 rounded-xl mx-auto"  hover>
                 <!-- Company and Job Information -->
                 <v-card-title>
-                  <v-row no-gutters align="center">
-                    <v-col cols="2">
+                  <v-row no-gutters align="center" class="mt-2">
+                    <v-col cols="2" class="pl-8" >
                       <v-img
                         :src="`http://127.0.0.1:8000/storage/logos/${job.company.logo}`"
-                        class="round-logo"
+                        class="company-avatar"
                         height="40"
                         width="40"
                         cover
                       />
                     </v-col>
-                    <v-col cols="7" class="company-name">
+                    <v-col cols="7" class="company-name-title">
                       {{ job.company.name }}
                     </v-col>
-                    <v-col cols="3" class="text-right">
+                    <v-col cols="3" class="text-uppercase font-weight-light" >
                       <v-icon>mdi-map-marker</v-icon>{{ job.company.address }}
                     </v-col>
                   </v-row>
                 </v-card-title>
 
+                <v-divider></v-divider>
+
                 <v-card-subtitle>
-                  <v-row no-gutters align="center">
-                    <v-col cols="6">
-                      <v-icon>mdi-sort-calendar-ascending</v-icon
-                      >{{ job.posted_date }}
+                  <v-row no-gutters align="center" class="mt-3">
+                    <v-col cols="5" class="pl-10">
+                      Posted On :{{ job.posted_date }}
                     </v-col>
-                    <v-col cols="6">
-                      <v-icon>mdi-sort-calendar-descending</v-icon
-                      >{{ job.expiry_date }}
+                    <v-col cols="7" class="pl-10">
+                      Expiry On :{{ job.expiry_date }}
                     </v-col>
                   </v-row>
                 </v-card-subtitle>
@@ -423,13 +427,14 @@ watch(
 </template>
 
 <style scoped>
+
 /* navbar styling starts */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #283046;
+  background-color: #070707;
   color: white;
 }
 
@@ -465,6 +470,12 @@ watch(
   color: #3f51b5; 
   padding-left: 10px;
   transition: all 0.3s;
+}
+
+.company-name-title{
+  font-weight: bold;
+  font-size: 35px;
+  color:#070707;
 }
 
 .company-name:hover {
