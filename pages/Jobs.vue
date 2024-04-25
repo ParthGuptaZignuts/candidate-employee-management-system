@@ -46,8 +46,13 @@ const handleLogout = () => {
 
 const fetchCompanyInfo = async () => {
   isLoading.value = true;
+  const token = localStorage.getItem("authToken");
   try {
-    const response = await axios.get("/companyinfo");
+    const response = await axios.get("/companyinfo", {
+      headers: {
+        Authorization: `Bearer${token}`,
+      },
+    });
     companyOptions.value = response.data.data.map((company) => ({
       name: company.name,
       logo: `http://127.0.0.1:8000/storage/logos/${company.logo}`,
@@ -164,13 +169,18 @@ watch(
 
 <template>
   <v-app>
-    <v-toolbar app color="primary" dark dense>
-      <v-toolbar-title>JOB FINDER</v-toolbar-title>
-      <v-spacer />
-      <v-btn @click="handleLogout" text>
-        <v-icon left>mdi-logout</v-icon>LOGOUT
-      </v-btn>
-    </v-toolbar>
+    <!-- navbar section starts -->
+    <nav class="navbar">
+      <div class="logo">
+        <span>Job<span style="font-size: x-large">FINDER</span></span>
+      </div>
+      <div class="links">
+        <VBtn class="login-btn" @click="handleLogout">
+          <v-icon>mdi mdi-logout</v-icon> LOGOUT</VBtn
+        >
+      </div>
+    </nav>
+    <!-- navbar section ends  -->
 
     <v-container fluid>
       <v-row>
@@ -180,35 +190,28 @@ watch(
           <p class="loading-text">Loading company information...</p>
         </v-col>
 
-        <v-col v-else cols="2">
-          <v-list dense>
-            <v-list-subheader>Companies Working With Us</v-list-subheader>
+        <!-- vlist section starts -->
+        <v-col v-if="!isLoading" cols="2">
+          <v-list nav :lines="false">
+            <v-list-header>Companies Associated with Us</v-list-header>
             <v-divider />
 
             <v-list-item
               v-for="(company, index) in companyOptions"
               :key="index"
-              class="d-flex company-list-item"
+              class="company-list-item"
             >
-              <!-- Align avatar and title -->
-              <v-list-item-avatar>
-                <v-img
-                  :src="company.logo"
-                  class="company-avatar"
-                  height="40"
-                  width="40"
-                  cover
-                />
-              </v-list-item-avatar>
+              <template #prepend>
+                <v-img :src="company.logo" contain height="40" width="40" class="company-avatar" />
+              </template>
 
-              <v-list-item-content class="company-list-content">
-                <v-list-item-title class="company-name">{{
-                  company.name
-                }}</v-list-item-title>
-              </v-list-item-content>
+              <v-list-item-title class="company-name text-uppercase">
+                {{ company.name }}
+              </v-list-item-title>
             </v-list-item>
           </v-list>
         </v-col>
+        <!-- vlist section ends -->
 
         <!-- Job Cards -->
         <v-col cols="10" class="job-list">
@@ -252,45 +255,45 @@ watch(
                     md="6"
                     lg="4"
                   >
-                  <v-card class="job-status-card">
-                    <v-card-title class="card-title">
-                      Position Applied For: {{ status.job_title }}
-                    </v-card-title>
-                    
-                    <v-card-subtitle class="card-subtitle">
-                      Company Applied In: {{ status.company_name }}
-                    </v-card-subtitle>
-                    
-                    <div class="demo-space-x">
-                      <!-- Success chip for 'Approved' -->
-                      <VChip 
-                        color="success" 
-                        class="status-chip"
-                        v-if="status.status === 'A'"
-                      >
-                      Approved
-                      </VChip>
-                      
-                      <!-- Error chip for 'Rejected' -->
-                      <VChip 
-                        color="error" 
-                        class="status-chip"
-                        v-if="status.status === 'R'"
-                      >
-                      Rejected
-                      </VChip>  
-                      
-                      <!-- Primary chip for 'Pending' -->
-                      <VChip 
-                        label="Pending" 
-                        color="primary" 
-                        class="status-chip"
-                        v-if="status.status === 'P'"
-                      >
-                      Pending
-                      </VChip>
-                    </div>
-                  </v-card>
+                    <v-card class="job-status-card">
+                      <v-card-title class="card-title">
+                        Position Applied For: {{ status.job_title }}
+                      </v-card-title>
+
+                      <v-card-subtitle class="card-subtitle">
+                        Company Applied In: {{ status.company_name }}
+                      </v-card-subtitle>
+
+                      <div class="demo-space-x">
+                        <!-- Success chip for 'Approved' -->
+                        <VChip
+                          color="success"
+                          class="status-chip"
+                          v-if="status.status === 'A'"
+                        >
+                          Approved
+                        </VChip>
+
+                        <!-- Error chip for 'Rejected' -->
+                        <VChip
+                          color="error"
+                          class="status-chip"
+                          v-if="status.status === 'R'"
+                        >
+                          Rejected
+                        </VChip>
+
+                        <!-- Primary chip for 'Pending' -->
+                        <VChip
+                          label="Pending"
+                          color="primary"
+                          class="status-chip"
+                          v-if="status.status === 'P'"
+                        >
+                          Pending
+                        </VChip>
+                      </div>
+                    </v-card>
                   </v-col>
                 </V-row>
               </div>
@@ -420,33 +423,52 @@ watch(
 </template>
 
 <style scoped>
+/* navbar styling starts */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #283046;
+  color: white;
+}
+
+.logo span {
+  font-size: 1.2rem;
+}
+
+.links button {
+  margin-left: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+/* navbar styling ends */
+
+/* vlisting starts */
 .company-avatar {
   border-radius: 50%;
-  transition: all 0.3s;
 }
 
 .company-list-item {
   transition: background-color 0.3s;
-  padding: 12px 16px; /* Slight padding for better alignment */
+  padding: 12px 16px;
   cursor: pointer;
+  align-items: center; 
 }
 
 .company-list-item:hover {
-  background-color: #e3f2fd; /* Subtle hover effect */
-}
-
-.company-list-content {
-  margin-left: 8px; /* Ensure text has a small margin from avatar */
+  background-color: #e3f2fd; 
 }
 
 .company-name {
   font-weight: bold;
-  color: #3f51b5; /* Primary color for the name */
+  color: #3f51b5; 
+  padding-left: 10px;
   transition: all 0.3s;
 }
 
-.company-list-item:hover .company-name {
-  color: #1a237e; /* Darker shade on hover */
+.company-name:hover {
+  color: #1a237e; 
 }
 
 /* Job list styling */
@@ -475,7 +497,6 @@ watch(
 .apply-button {
   text-transform: uppercase;
 }
-
 
 /* Job status chips */
 .job-status-card {
