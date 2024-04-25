@@ -2,12 +2,15 @@
 import { ref, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { emailValidator, requiredValidator } from "../utils/validators";
 
 // Modal visibility
 const loginModal = ref(false);
 const signupModal = ref(false);
 // router
 const router = useRouter();
+const refForm = ref();
+const refSignupForm = ref();
 
 // Form data
 const loginFormData = ref({
@@ -105,20 +108,25 @@ const LoginSubmitForm = async () => {
   }
 };
 
-// Handle signup form submission
 const SignupSubmitForm = async () => {
-  try {
-    const response = await axios.post("register", signupFormData.value);
-    useNuxtApp().$toast.success("Successfully Registered...");
-    if (response) {
-      SignupResetForm();
-      setTimeout(() => {
+  if (
+    signupFormData.value.password !== signupFormData.value.password_confirmation
+  ) {
+    useNuxtApp().$toast.error("Passwords do not match");
+    return;
+  }
+
+  if (isSignupFormValid.value) {
+    try {
+      const response = await axios.post("/register", signupFormData.value);
+      if (response) {
+        useNuxtApp().$toast.success("Register successfully...");
         closeSignupModal();
-      }, 1500);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      alert("An error occurred during registration.");
     }
-  } catch (error) {
-    useNuxtApp().$toast.error("Error Occurred while Registring...");
-    console.error("Error:", error);
   }
 };
 </script>
@@ -149,7 +157,7 @@ const SignupSubmitForm = async () => {
       </VBtn>
       <VCardTitle class="login-title">LOGIN</VCardTitle>
       <VCardText>
-        <VForm @submit.prevent="LoginSubmitForm">
+        <VForm ref="refForm" @submit.prevent="LoginSubmitForm">
           <VRow>
             <VCol cols="12">
               <VTextField
@@ -157,9 +165,8 @@ const SignupSubmitForm = async () => {
                 label="Email"
                 type="email"
                 placeholder="Email"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[emailValidator, requiredValidator]"
                 v-model="loginFormData.email"
               ></VTextField>
             </VCol>
@@ -169,9 +176,8 @@ const SignupSubmitForm = async () => {
                 label="Password"
                 type="password"
                 placeholder="Password"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[requiredValidator]"
                 v-model="loginFormData.password"
               ></VTextField>
             </VCol>
@@ -208,7 +214,7 @@ const SignupSubmitForm = async () => {
       </VBtn>
       <VCardTitle class="login-title">SIGNUP</VCardTitle>
       <VCardText>
-        <VForm @submit.prevent="SignupSubmitForm">
+        <VForm ref="refSignupForm" @submit.prevent="SignupSubmitForm">
           <VRow>
             <!-- First Name -->
             <VCol cols="12" sm="6">
@@ -217,9 +223,8 @@ const SignupSubmitForm = async () => {
                 label="First Name"
                 type="text"
                 placeholder="First Name"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[requiredValidator]"
                 v-model="signupFormData.first_name"
               ></VTextField>
             </VCol>
@@ -230,9 +235,8 @@ const SignupSubmitForm = async () => {
                 label="Last Name"
                 type="text"
                 placeholder="Last Name"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[requiredValidator]"
                 v-model="signupFormData.last_name"
               ></VTextField>
             </VCol>
@@ -243,9 +247,8 @@ const SignupSubmitForm = async () => {
                 label="Email"
                 type="email"
                 placeholder="Email"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[emailValidator, requiredValidator]"
                 v-model="signupFormData.email"
               ></VTextField>
             </VCol>
@@ -256,9 +259,8 @@ const SignupSubmitForm = async () => {
                 label="Phone Number"
                 type="number"
                 placeholder="Phone Number"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[requiredValidator]"
                 v-model="signupFormData.phone"
               ></VTextField>
             </VCol>
@@ -269,9 +271,8 @@ const SignupSubmitForm = async () => {
                 label="Date of Birth"
                 type="date"
                 placeholder="Date of Birth"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[requiredValidator]"
                 v-model="signupFormData.dob"
               ></VTextField>
             </VCol>
@@ -282,9 +283,8 @@ const SignupSubmitForm = async () => {
                 label="City"
                 type="text"
                 placeholder="City"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[requiredValidator]"
                 v-model="signupFormData.city"
               ></VTextField>
             </VCol>
@@ -295,9 +295,8 @@ const SignupSubmitForm = async () => {
                 label="Password"
                 type="password"
                 placeholder="Password"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[requiredValidator]"
                 v-model="signupFormData.password"
               ></VTextField>
             </VCol>
@@ -309,9 +308,8 @@ const SignupSubmitForm = async () => {
                 label="Confirm Password"
                 type="password"
                 placeholder="Password"
-                outlined
-                dense
-                required
+                variant="outlined"
+                :rules="[requiredValidator]"
                 v-model="signupFormData.password_confirmation"
               ></VTextField>
             </VCol>

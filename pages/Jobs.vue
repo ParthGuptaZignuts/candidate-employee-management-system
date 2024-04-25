@@ -2,7 +2,6 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import axois from "~/plugins/axois";
 
 const router = useRouter();
 const companyOptions = ref([]);
@@ -246,16 +245,51 @@ watch(
 
               <div>
                 <V-row dense>
-                  <v-col 
-                  v-for="(status , index) in jobStatus"
-                  :key="index"
-                  cols=12
-                  md="6"
-                  lg="4">
-                  <v-card>
-                    <v-card-title >Position Applied For : {{status.job_title}}</v-card-title>
-                    <v-card-subtitle >Company Applied In : {{status.company_name}}</v-card-subtitle>
-                    <v-card-subtitle >Current Status :  {{status.status}}</v-card-subtitle>
+                  <v-col
+                    v-for="(status, index) in jobStatus"
+                    :key="index"
+                    cols="12"
+                    md="6"
+                    lg="4"
+                  >
+                  <v-card class="job-status-card">
+                    <v-card-title class="card-title">
+                      Position Applied For: {{ status.job_title }}
+                    </v-card-title>
+                    
+                    <v-card-subtitle class="card-subtitle">
+                      Company Applied In: {{ status.company_name }}
+                    </v-card-subtitle>
+                    
+                    <div class="demo-space-x">
+                      <!-- Success chip for 'Approved' -->
+                      <VChip 
+                        color="success" 
+                        class="status-chip"
+                        v-if="status.status === 'A'"
+                      >
+                      Approved
+                      </VChip>
+                      
+                      <!-- Error chip for 'Rejected' -->
+                      <VChip 
+                        color="error" 
+                        class="status-chip"
+                        v-if="status.status === 'R'"
+                      >
+                      Rejected
+                      </VChip>  
+                      
+                      <!-- Primary chip for 'Pending' -->
+                      <VChip 
+                        label="Pending" 
+                        color="primary" 
+                        class="status-chip"
+                        v-if="status.status === 'P'"
+                      >
+                      Pending
+                      </VChip>
+                    </div>
                   </v-card>
                   </v-col>
                 </V-row>
@@ -440,5 +474,54 @@ watch(
 /* Apply button uppercase styling */
 .apply-button {
   text-transform: uppercase;
+}
+
+
+/* Job status chips */
+.job-status-card {
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px; /* Consistent padding for a balanced layout */
+  background-color: #fafafa; /* Soft background color */
+  margin-bottom: 16px; /* Spacing between cards */
+}
+
+/* Title and subtitle styling */
+.card-title {
+  font-weight: bold;
+  color: #3f51b5; /* Darker shade for emphasis */
+}
+
+.card-subtitle {
+  color: #757575; /* Subtle gray for less important text */
+  margin-bottom: 8px; /* Padding between title and subtitle */
+  font-size: 1.2rem;
+}
+
+/* Chip container styling */
+.status-chips {
+  display: flex; /* Align chips in a row */
+  gap: 8px; /* Space between chips */
+  margin-top: 8px; /* Space above the chip row */
+}
+
+/* Specific chip styling */
+.status-chip {
+  font-weight: bold; /* Emphasize the text */
+  border-radius: 50px; /* Circular chip shape */
+  padding: 6px 12px; /* Padding within the chip */
+}
+
+/* Chip color adjustments for better visibility */
+.status-chip[color="success"] {
+  background-color: #4caf50; /* Green for 'Approved' */
+}
+
+.status-chip[color="error"] {
+  background-color: #f44336; /* Red for 'Rejected' */
+}
+
+.status-chip[color="primary"] {
+  background-color: #2196f3; /* Blue for 'Pending' */
 }
 </style>
