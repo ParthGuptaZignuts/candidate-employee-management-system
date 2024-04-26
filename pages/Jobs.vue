@@ -245,13 +245,12 @@ watch(
             fullscreen
             :scrim="false"
             transition="dialog-bottom-transition"
-            class="my-job-status-dialog"
           >
             <!-- Dialog Content -->
             <VCard>
               <!-- Toolbar -->
               <div>
-                <VToolbar color="primary">
+                <VToolbar class="navbar">
                   <VBtn icon variant="plain" @click="closeMyJobStatusDailog">
                     <VIcon color="white" icon="mdi mdi-close-circle" />
                   </VBtn>
@@ -279,7 +278,30 @@ watch(
                         Company Applied In: {{ status.company_name }}
                       </v-card-subtitle>
 
-                      <div class="demo-space-x">
+                      <v-card-subtitle class="card-subtitle">
+                        <v-row class="d-flex mt-2">
+                          <v-col>
+                            <VChip variant="tonal" color="info">
+                              <VIcon start icon="mdi-pin" />
+                              {{ status.company_location }}
+                            </VChip>
+                          </v-col>
+                          <v-col>
+                            <VChip variant="tonal" color="error">
+                              <VIcon start icon="mdi-clock-time-eight" />
+                              {{ status.job_expiry }}
+                            </VChip>
+                          </v-col>
+                          <v-col>
+                            <VChip variant="tonal" color="success">
+                              <VIcon start icon="mdi mdi-currency-inr" />
+                              {{ status.job_salary }}
+                            </VChip>
+                          </v-col>
+                        </v-row>
+                      </v-card-subtitle>
+
+                      <div class="demo-space-x mt-5 text-uppercase">
                         <!-- Success chip for 'Approved' -->
                         <VChip
                           color="success"
@@ -316,6 +338,7 @@ watch(
           </VDialog>
           <!-- vdialog for showing jobs status ends-->
 
+          <!-- job cards starts -->
           <v-row dense>
             <v-col
               v-for="(job, index) in jobsOptions"
@@ -383,10 +406,16 @@ watch(
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col cols="4" class="pl-10 font-weight-black text-subtitle-1">
+                    <v-col
+                      cols="5"
+                      class="pl-6 font-weight-black text-subtitle-1"
+                    >
                       <v-icon>mdi-currency-rupee</v-icon>{{ job.salary }}
                     </v-col>
-                    <v-col cols="8"  class="text-uppercase font-italic font-weight-thin pl-12 pt-4">
+                    <v-col
+                      cols="7"
+                      class="text-uppercase font-italic font-weight-thin pl-8 pt-4"
+                    >
                       {{ job.experience_required }}
                     </v-col>
                   </v-row>
@@ -406,6 +435,7 @@ watch(
               </v-card>
             </v-col>
           </v-row>
+          <!-- job cards ends -->
         </v-col>
       </v-row>
     </v-container>
@@ -419,7 +449,12 @@ watch(
           <!-- Form with validation -->
           <v-form ref="form" v-model="isFormValid" lazy-validation>
             <!-- Email field with validation -->
-            <v-text-field v-model="email" label="Email" disabled variant="outlined" />
+            <v-text-field
+              v-model="email"
+              label="Email"
+              disabled
+              variant="outlined"
+            />
 
             <!-- File input field with validation -->
             <v-file-input
@@ -531,51 +566,53 @@ watch(
 /* Apply button uppercase styling */
 .apply-button {
   text-transform: uppercase;
-  width:100vw;
+  width: 100vw;
 }
 
 /* Job status chips */
 .job-status-card {
   border-radius: 8px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 16px; 
-  background-color: #fafafa; 
+  padding: 16px;
+  background-color: #fafafa;
   margin-bottom: 16px;
+  text-align: center;
 }
 
 /* Title and subtitle styling */
 .card-title {
   font-weight: bold;
-  color: #3f51b5; 
+  color: #3f51b5;
 }
 
 .card-subtitle {
   color: #757575;
-  margin-bottom: 8px; 
+  margin-bottom: 8px;
   font-size: 1.2rem;
+  text-transform: capitalize;
 }
 
 /* Chip container styling */
 .status-chips {
-  display: flex; 
-  gap: 8px; 
-  margin-top: 8px; 
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 /* Specific chip styling */
 .status-chip {
-  font-weight: bold; 
-  border-radius: 50px; 
-  padding: 6px 12px; 
+  font-weight: bold;
+  border-radius: 50px;
+  padding: 6px 12px;
 }
 
 /* Chip color adjustments for better visibility */
 .status-chip[color="success"] {
-  background-color: #4caf50; 
+  background-color: #4caf50;
 }
 
 .status-chip[color="error"] {
-  background-color: #f44336; 
+  background-color: #f44336;
 }
 
 .status-chip[color="primary"] {
