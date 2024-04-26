@@ -68,7 +68,7 @@ const fetchCompanyInfo = async () => {
 const fetchJobsWithCompany = async () => {
   try {
     const response = await axios.get("/jobsInfo");
-    jobsOptions.value = response.data;
+    jobsOptions.value = response.data.data;
   } catch (error) {
     console.error("Error fetching jobs:", error);
   }
