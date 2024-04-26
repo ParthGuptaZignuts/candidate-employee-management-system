@@ -25,6 +25,7 @@ const isSubmitEnabled = computed(() => {
 
 const openMyJobStatusDailog = () => {
   myjobStatusDialog.value = true;
+  fetchJobStatus();
 };
 
 const closeMyJobStatusDailog = () => {
@@ -168,7 +169,7 @@ watch(
 </script>
 
 <template>
-  <v-app style="background-color: #f0f5fa">
+  <VApp style="background-color: #f0f5fa">
     <!-- navbar section starts -->
     <nav class="navbar">
       <div class="logo">
@@ -176,22 +177,22 @@ watch(
       </div>
       <div class="links">
         <VBtn class="login-btn" @click="handleLogout">
-          <v-icon>mdi mdi-logout</v-icon> LOGOUT</VBtn
+          <VIcon>mdi mdi-logout</VIcon> LOGOUT</VBtn
         >
       </div>
     </nav>
     <!-- navbar section ends  -->
 
-    <v-container fluid>
-      <v-row>
+    <VContainer fluid>
+      <VRow>
         <!-- Company List -->
-        <v-col cols="12" v-if="isLoading" class="text-center loading-section">
-          <v-progress-circular indeterminate color="primary" size="50" />
+        <VCol cols="12" v-if="isLoading" class="text-center loading-section">
+          <VProgressCircular indeterminate color="primary" size="50" />
           <p class="loading-text">Loading company information...</p>
-        </v-col>
+        </VCol>
 
         <!-- vlist section starts -->
-        <v-col v-if="!isLoading" cols="2">
+        <VCol v-if="!isLoading" cols="2">
           <v-list nav :lines="false" style="background-color: transparent">
             <v-list-header class="font-weight-black"
               >Companies Associated with Us</v-list-header
@@ -204,7 +205,7 @@ watch(
               class="company-list-item"
             >
               <template #prepend>
-                <v-img
+                <VImg
                   :src="company.logo"
                   contain
                   height="40"
@@ -218,13 +219,13 @@ watch(
               </v-list-item-title>
             </v-list-item>
           </v-list>
-        </v-col>
+        </VCol>
         <!-- vlist section ends -->
 
-        <v-col cols="10" class="job-list">
+        <VCol cols="10" class="job-list">
           <!-- my job button -->
-          <v-row class="mb-1">
-            <v-col>
+          <VRow class="mb-1">
+            <VCol>
               <div class="demo-space-x float-right">
                 <VBtn
                   variant="tonal"
@@ -235,8 +236,8 @@ watch(
                   My Job Status
                 </VBtn>
               </div>
-            </v-col>
-          </v-row>
+            </VCol>
+          </VRow>
           <!-- my job button ends -->
 
           <!-- vdialog for showing jobs status starts-->
@@ -255,51 +256,51 @@ watch(
                     <VIcon color="white" icon="mdi mdi-close-circle" />
                   </VBtn>
 
-                  <VToolbarTitle class="text-h5">My Job Status</VToolbarTitle>
+                  <VToolbarTitle class="text-h5">Job Status</VToolbarTitle>
                   <VSpacer />
                 </VToolbar>
               </div>
 
               <div>
-                <V-row dense>
-                  <v-col
+                <VRow dense>
+                  <VCol
                     v-for="(status, index) in jobStatus"
                     :key="index"
                     cols="12"
                     md="6"
                     lg="4"
                   >
-                    <v-card class="job-status-card">
-                      <v-card-title class="card-title">
+                    <VCard class="job-status-card">
+                      <VCardTitle class="card-title">
                         Position Applied For: {{ status.job_title }}
-                      </v-card-title>
+                      </VCardTitle>
 
-                      <v-card-subtitle class="card-subtitle">
+                      <VCardSubTitle class="card-subtitle">
                         Company Applied In: {{ status.company_name }}
-                      </v-card-subtitle>
+                      </VCardSubTitle>
 
-                      <v-card-subtitle class="card-subtitle">
-                        <v-row class="d-flex mt-2">
-                          <v-col>
+                      <VCardSubTitle class="card-subtitle">
+                        <VRow class="d-flex mt-2">
+                          <VCol>
                             <VChip variant="tonal" color="info">
                               <VIcon start icon="mdi-pin" />
                               {{ status.company_location }}
                             </VChip>
-                          </v-col>
-                          <v-col>
+                          </VCol>
+                          <VCol>
                             <VChip variant="tonal" color="error">
                               <VIcon start icon="mdi-clock-time-eight" />
                               {{ status.job_expiry }}
                             </VChip>
-                          </v-col>
-                          <v-col>
+                          </VCol>
+                          <VCol>
                             <VChip variant="tonal" color="success">
                               <VIcon start icon="mdi mdi-currency-inr" />
                               {{ status.job_salary }}
                             </VChip>
-                          </v-col>
-                        </v-row>
-                      </v-card-subtitle>
+                          </VCol>
+                        </VRow>
+                      </VCardSubTitle>
 
                       <div class="demo-space-x mt-5 text-uppercase">
                         <!-- Success chip for 'Approved' -->
@@ -330,17 +331,17 @@ watch(
                           Pending
                         </VChip>
                       </div>
-                    </v-card>
-                  </v-col>
-                </V-row>
+                    </VCard>
+                  </VCol>
+                </VRow>
               </div>
             </VCard>
           </VDialog>
           <!-- vdialog for showing jobs status ends-->
 
           <!-- job cards starts -->
-          <v-row dense>
-            <v-col
+          <VRow dense>
+            <VCol
               v-for="(job, index) in jobsOptions"
               :key="index"
               cols="12"
@@ -348,104 +349,104 @@ watch(
               lg="4"
               class="mb-4"
             >
-              <v-card class="job-card h-100 rounded-xl mx-auto" hover>
+              <VCard class="job-card h-100 rounded-xl mx-auto" hover>
                 <!-- Company and Job Information -->
-                <v-card-title>
-                  <v-row no-gutters align="center" class="mt-2">
-                    <v-col cols="2" class="pl-8">
-                      <v-img
+                <VCardTitle>
+                  <VRow no-gutters align="center" class="mt-2">
+                    <VCol cols="2" class="pl-8">
+                      <VImg
                         :src="`http://127.0.0.1:8000/storage/logos/${job.company.logo}`"
                         class="company-avatar"
                         height="40"
                         width="40"
                         cover
                       />
-                    </v-col>
-                    <v-col cols="7" class="company-name-title">
+                    </VCol>
+                    <VCol cols="7" class="company-name-title">
                       {{ job.company.name }}
-                    </v-col>
-                    <v-col cols="3" class="text-uppercase font-weight-light">
-                      <v-icon>mdi-map-marker</v-icon>{{ job.company.address }}
-                    </v-col>
-                  </v-row>
-                </v-card-title>
+                    </VCol>
+                    <VCol cols="3" class="text-uppercase font-weight-light">
+                      <VIcon>mdi-map-marker</VIcon>{{ job.company.address }}
+                    </VCol>
+                  </VRow>
+                </VCardTitle>
 
                 <v-divider></v-divider>
 
                 <!-- posted on expiry on  -->
-                <v-card-subtitle>
-                  <v-row no-gutters align="center" class="mt-3">
-                    <v-col cols="5" class="pl-10">
+                <VCardSubTitle>
+                  <VRow no-gutters align="center" class="mt-3">
+                    <VCol cols="5" class="pl-10">
                       Posted On :{{ job.posted_date }}
-                    </v-col>
-                    <v-col cols="7" class="pl-10">
+                    </VCol>
+                    <VCol cols="7" class="pl-10">
                       Expiry On :{{ job.expiry_date }}
-                    </v-col>
-                  </v-row>
-                </v-card-subtitle>
+                    </VCol>
+                  </VRow>
+                </VCardSubTitle>
 
                 <!-- Job Details -->
-                <v-card-text>
+                <VCard-text>
                   <h1 class="job-title">{{ job.title }}</h1>
-                  <v-row>
+                  <VRow>
                     <!-- job employment type -->
-                    <v-col cols="6" class="mt-2 pl-12">
+                    <VCol cols="6" class="mt-2 pl-12">
                       <div class="demo-space-x">
                         <VChip color="success">
                           {{ job.employment_type }}
                         </VChip>
-                      </div></v-col
+                      </div></VCol
                     >
                     <!-- skills required -->
-                    <v-col cols="6" class="mt-2 pl-3">
+                    <VCol cols="6" class="mt-2 pl-3">
                       <div class="demo-space-x">
                         <VChip :label="false" color="primary">
                           {{ job.skills_required }}
                         </VChip>
                       </div>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col
+                    </VCol>
+                  </VRow>
+                  <VRow>
+                    <VCol
                       cols="5"
                       class="pl-6 font-weight-black text-subtitle-1"
                     >
-                      <v-icon>mdi-currency-rupee</v-icon>{{ job.salary }}
-                    </v-col>
-                    <v-col
+                      <VIcon>mdi-currency-rupee</VIcon>{{ job.salary }}
+                    </VCol>
+                    <VCol
                       cols="7"
                       class="text-uppercase font-italic font-weight-thin pl-8 pt-4"
                     >
                       {{ job.experience_required }}
-                    </v-col>
-                  </v-row>
-                </v-card-text>
+                    </VCol>
+                  </VRow>
+                </VCard-text>
 
                 <!-- Apply Button -->
-                <v-card-actions>
-                  <v-btn
+                <VCard-actions>
+                  <VBtn
                     color="primary"
                     class="apply-button"
                     @click="handleApply(job.id)"
                     :disabled="jobApplicationStatus[job.id]"
                   >
                     APPLY
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-col>
-          </v-row>
+                  </VBtn>
+                </VCard-actions>
+              </VCard>
+            </VCol>
+          </VRow>
           <!-- job cards ends -->
-        </v-col>
-      </v-row>
-    </v-container>
+        </VCol>
+      </VRow>
+    </VContainer>
 
     <!-- Apply dialog -->
     <v-dialog v-model="applyDialog" max-width="400" persistent>
-      <v-card>
-        <v-card-title class="d-flex justify-center">Apply for Job</v-card-title>
+      <VCard>
+        <VCardTitle class="d-flex justify-center">Apply for Job</VCardTitle>
 
-        <v-card-text>
+        <VCard-text>
           <!-- Form with validation -->
           <v-form ref="form" v-model="isFormValid" lazy-validation>
             <!-- Email field with validation -->
@@ -465,24 +466,24 @@ watch(
               variant="outlined"
             />
           </v-form>
-        </v-card-text>
+        </VCard-text>
 
-        <v-card-actions>
+        <VCard-actions>
           <!-- Cancel button -->
-          <v-btn text @click="closeDialog">Cancel</v-btn>
+          <VBtn text @click="closeDialog">Cancel</VBtn>
 
           <!-- Apply button with correct validation -->
-          <v-btn
+          <VBtn
             color="primary"
             @click="submitApplication"
             :disabled="!isSubmitEnabled"
           >
             Submit
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+          </VBtn>
+        </VCard-actions>
+      </VCard>
     </v-dialog>
-  </v-app>
+  </VApp>
 </template>
 
 <style scoped>

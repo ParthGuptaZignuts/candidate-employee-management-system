@@ -158,7 +158,7 @@ const SignupSubmitForm = async () => {
       <VCardTitle class="login-title">LOGIN</VCardTitle>
       <VCardText>
         <VForm ref="refForm" @submit.prevent="LoginSubmitForm">
-          <VRow>
+          <VRow >
             <VCol cols="12">
               <VTextField
                 prepend-inner-icon="mdi mdi-email-outline"
@@ -193,7 +193,7 @@ const SignupSubmitForm = async () => {
                 >Reset</VBtn
               >
             </VCol>
-          </VRow>
+          </VRow >
         </VForm>
       </VCardText>
     </VCard>
@@ -215,7 +215,7 @@ const SignupSubmitForm = async () => {
       <VCardTitle class="login-title">SIGNUP</VCardTitle>
       <VCardText>
         <VForm ref="refSignupForm" @submit.prevent="SignupSubmitForm">
-          <VRow>
+          <VRow >
             <!-- First Name -->
             <VCol cols="12" sm="6">
               <VTextField
@@ -326,7 +326,7 @@ const SignupSubmitForm = async () => {
                 >Reset</VBtn
               >
             </VCol>
-          </VRow>
+          </VRow >
         </VForm>
       </VCardText>
     </VCard>

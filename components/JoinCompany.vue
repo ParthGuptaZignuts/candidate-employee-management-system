@@ -32,15 +32,15 @@ onMounted(fetchCompanyNames);
     </h1>
 
     <!-- Display loading message until data is loaded -->
-    <v-row>
-      <v-col cols="12" v-if="isLoading" class="text-center loading-section">
-        <v-progress-circular indeterminate color="primary" size="50" />
+    <VRow>
+      <VCol cols="12" v-if="isLoading" class="text-center loading-section">
+        <VProgressCircular indeterminate color="primary" size="50" />
         <p class="loading-text">Loading company information...</p>
-      </v-col>
+      </VCol>
 
       <!-- Display companies once data is loaded -->
       <template v-else>
-        <v-col
+        <VCol
           v-for="(company, index) in companyOptions"
           :key="index"
           cols="12"
@@ -48,37 +48,37 @@ onMounted(fetchCompanyNames);
           md="3"
           class="d-flex justify-center mb-4"
         >
-          <v-card
+          <VCard
             outlined
             class="elevation-3 hoverable card"
             transition="scale-transition"
           >
             <!-- Company image with a subtle hover transition -->
-            <v-img
+            <VImg
               :src="`http://127.0.0.1:8000/storage/logos/${company.logo}`"
               height="200px"
               width="350px"
               aspect-ratio="1.5"
               class="company-image"
-            ></v-img>
+            ></VImg>
 
             <!-- Company title centered in the card -->
-            <v-card-title class="justify-center card-title">{{ company.name }}</v-card-title>
-          </v-card>
-        </v-col>
+            <VCardTitle class="justify-center card-title">{{ company.name }}</VCardTitle>
+          </VCard>
+        </VCol>
       </template>
 
       <!-- "Show More" link aligned to the right -->
-      <v-col cols="12" class="d-flex justify-end show-more-col">
-        <v-btn
+      <VCol cols="12" class="d-flex justify-end show-more-col">
+        <VBtn
           class="show-more-link"
           @click="showMore"
           text
         >
           Show More &rarr;
-        </v-btn>
-      </v-col>
-    </v-row>
+        </VBtn>
+      </VCol>
+    </VRow>
   </div>
 </template>
 

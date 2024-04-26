@@ -5,10 +5,10 @@ const browseAction =()=>{
 </script>
 <template>
     <div class="background-image-container">
-      <v-container fluid>
-        <v-row class="align-center justify-center" dense>
+      <VContainer fluid>
+        <VRow  class="align-center justify-center" dense>
           <!-- Text section -->
-          <v-col
+          <VCol
             cols="12"
             md="6"
             lg="6"
@@ -24,7 +24,7 @@ const browseAction =()=>{
               wherever you want.
             </p>
             <!-- Call to Action Button -->
-            <v-btn
+            <VBtn
               class="cta-btn"
               color="primary"
               large
@@ -33,10 +33,10 @@ const browseAction =()=>{
               @click="browseAction"
             >
               Browse Jobs
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
+            </VBtn>
+          </VCol>
+        </VRow>
+      </VContainer>
     </div>
   </template>
   
@@ -77,7 +77,7 @@ const browseAction =()=>{
     margin-top: 20px;
   }
   
-  .v-btn {
+  .VBtn {
     border-radius: 25px;
     text-transform: uppercase; 
   }
