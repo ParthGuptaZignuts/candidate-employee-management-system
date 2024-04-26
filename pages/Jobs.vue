@@ -381,16 +381,13 @@ watch(
                         </VChip>
                       </div>
                     </v-col>
-
                   </v-row>
                   <v-row>
-                    <v-col cols="12">
-                      Experience Required: {{ job.experience_required }}
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12">
+                    <v-col cols="4" class="pl-10 font-weight-black text-subtitle-1">
                       <v-icon>mdi-currency-rupee</v-icon>{{ job.salary }}
+                    </v-col>
+                    <v-col cols="8"  class="text-uppercase font-italic font-weight-thin pl-12 pt-4">
+                      {{ job.experience_required }}
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -416,13 +413,13 @@ watch(
     <!-- Apply dialog -->
     <v-dialog v-model="applyDialog" max-width="400" persistent>
       <v-card>
-        <v-card-title>Apply for Job</v-card-title>
+        <v-card-title class="d-flex justify-center">Apply for Job</v-card-title>
 
         <v-card-text>
           <!-- Form with validation -->
           <v-form ref="form" v-model="isFormValid" lazy-validation>
             <!-- Email field with validation -->
-            <v-text-field v-model="email" label="Email" disabled required />
+            <v-text-field v-model="email" label="Email" disabled variant="outlined" />
 
             <!-- File input field with validation -->
             <v-file-input
@@ -430,6 +427,7 @@ watch(
               label="Upload Resume"
               required
               accept=".pdf,.doc,.docx"
+              variant="outlined"
             />
           </v-form>
         </v-card-text>
@@ -533,53 +531,54 @@ watch(
 /* Apply button uppercase styling */
 .apply-button {
   text-transform: uppercase;
+  width:100vw;
 }
 
 /* Job status chips */
 .job-status-card {
   border-radius: 8px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 16px; /* Consistent padding for a balanced layout */
-  background-color: #fafafa; /* Soft background color */
-  margin-bottom: 16px; /* Spacing between cards */
+  padding: 16px; 
+  background-color: #fafafa; 
+  margin-bottom: 16px;
 }
 
 /* Title and subtitle styling */
 .card-title {
   font-weight: bold;
-  color: #3f51b5; /* Darker shade for emphasis */
+  color: #3f51b5; 
 }
 
 .card-subtitle {
-  color: #757575; /* Subtle gray for less important text */
-  margin-bottom: 8px; /* Padding between title and subtitle */
+  color: #757575;
+  margin-bottom: 8px; 
   font-size: 1.2rem;
 }
 
 /* Chip container styling */
 .status-chips {
-  display: flex; /* Align chips in a row */
-  gap: 8px; /* Space between chips */
-  margin-top: 8px; /* Space above the chip row */
+  display: flex; 
+  gap: 8px; 
+  margin-top: 8px; 
 }
 
 /* Specific chip styling */
 .status-chip {
-  font-weight: bold; /* Emphasize the text */
-  border-radius: 50px; /* Circular chip shape */
-  padding: 6px 12px; /* Padding within the chip */
+  font-weight: bold; 
+  border-radius: 50px; 
+  padding: 6px 12px; 
 }
 
 /* Chip color adjustments for better visibility */
 .status-chip[color="success"] {
-  background-color: #4caf50; /* Green for 'Approved' */
+  background-color: #4caf50; 
 }
 
 .status-chip[color="error"] {
-  background-color: #f44336; /* Red for 'Rejected' */
+  background-color: #f44336; 
 }
 
 .status-chip[color="primary"] {
-  background-color: #2196f3; /* Blue for 'Pending' */
+  background-color: #2196f3;
 }
 </style>
