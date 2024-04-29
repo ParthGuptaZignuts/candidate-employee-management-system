@@ -1,8 +1,10 @@
 <script setup>
+// imports of required modules
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
+// ref variables
 const router = useRouter();
 const companyOptions = ref([]);
 const isLoading = ref(false);
@@ -13,8 +15,6 @@ const resume = ref(null);
 const form = ref(null);
 const myjobStatusDialog = ref(false);
 const jobStatus = ref([]);
-
-// Form validity tracking
 const isFormValid = ref(false);
 const jobApplicationStatus = ref({});
 
@@ -23,15 +23,18 @@ const isSubmitEnabled = computed(() => {
   return email.value.trim() !== "" && resume.value !== null;
 });
 
+// my job status dialog opening function
 const openMyJobStatusDailog = () => {
   myjobStatusDialog.value = true;
   fetchJobStatus();
 };
 
+// my job status dialog closing function
 const closeMyJobStatusDailog = () => {
   myjobStatusDialog.value = false;
 };
 
+// logout function
 const handleLogout = () => {
   if (process.client) {
     localStorage.removeItem("authToken");
@@ -45,6 +48,7 @@ const handleLogout = () => {
   }, 1500);
 };
 
+// fetch company information
 const fetchCompanyInfo = async () => {
   isLoading.value = true;
   const token = localStorage.getItem("authToken");
@@ -65,6 +69,7 @@ const fetchCompanyInfo = async () => {
   }
 };
 
+// fetch the jobs with company information
 const fetchJobsWithCompany = async () => {
   try {
     const response = await axios.get("/jobsInfo");
@@ -74,6 +79,7 @@ const fetchJobsWithCompany = async () => {
   }
 };
 
+// fetch my job status information
 const fetchJobStatus = async () => {
   try {
     const userId = localStorage.getItem("user_id");
@@ -95,22 +101,27 @@ const fetchJobStatus = async () => {
   }
 };
 
+// upload resume clear dialog
 const dialogClear = () => {
   resume.value = null;
 };
 
+// upload resume close dialog
 const closeDialog = () => {
   applyDialog.value = false;
   dialogClear();
 };
 
+// hand apply function
 const handleApply = (id) => {
   applyDialog.value = true;
+  // for client local storage using process.client
   if (process.client) {
     localStorage.setItem("jobId", id);
   }
 };
 
+// submit application function
 const submitApplication = async () => {
   if (form.value) {
     const isValid = await form.value.validate();
@@ -142,6 +153,17 @@ const submitApplication = async () => {
   }
 };
 
+// Save the applied jobs to local storage when the state changes
+watch(
+  jobApplicationStatus,
+  (newVal) => {
+    if (process.client) {
+      localStorage.setItem("appliedJobs", JSON.stringify(newVal));
+    }
+  },
+  { deep: true }
+);
+
 onMounted(() => {
   if (process.client) {
     email.value = localStorage.getItem("userEmail") || "";
@@ -155,26 +177,17 @@ onMounted(() => {
   fetchJobsWithCompany();
   fetchJobStatus();
 });
-
-// Save the applied jobs to local storage when the state changes
-watch(
-  jobApplicationStatus,
-  (newVal) => {
-    if (process.client) {
-      localStorage.setItem("appliedJobs", JSON.stringify(newVal));
-    }
-  },
-  { deep: true }
-);
 </script>
 
 <template>
   <VApp style="background-color: #f0f5fa">
     <!-- navbar section starts -->
     <nav class="navbar">
+      <!-- title -->
       <div class="logo">
         <span>Job<span style="font-size: x-large">FINDER</span></span>
       </div>
+      <!-- logout button -->
       <div class="links">
         <VBtn class="login-btn" @click="handleLogout">
           <VIcon>mdi mdi-logout</VIcon> LOGOUT</VBtn
@@ -193,7 +206,7 @@ watch(
 
         <!-- vlist section starts -->
         <VCol v-if="!isLoading" cols="2">
-          <v-list nav :lines="false" style="background-color: transparent">
+          <v-list :lines="false" nav style="background-color: transparent">
             <v-list-header class="font-weight-black"
               >Companies Associated with Us</v-list-header
             >
@@ -243,8 +256,8 @@ watch(
           <!-- vdialog for showing jobs status starts-->
           <VDialog
             v-model="myjobStatusDialog"
-            fullscreen
             :scrim="false"
+            fullscreen
             transition="dialog-bottom-transition"
           >
             <!-- Dialog Content -->
@@ -270,15 +283,18 @@ watch(
                     md="6"
                     lg="4"
                   >
+                  <!-- job title -->
                     <VCard class="job-status-card">
                       <VCardTitle class="card-title">
                         Position Applied For: {{ status.job_title }}
                       </VCardTitle>
 
+                      <!-- company name -->
                       <VCardSubTitle class="card-subtitle">
                         Company Applied In: {{ status.company_name }}
                       </VCardSubTitle>
 
+                      <!-- company location -->
                       <VCardSubTitle class="card-subtitle">
                         <VRow class="d-flex mt-2">
                           <VCol>
@@ -288,12 +304,14 @@ watch(
                             </VChip>
                           </VCol>
                           <VCol>
+                            <!-- job expiry -->
                             <VChip variant="tonal" color="error">
                               <VIcon start icon="mdi-clock-time-eight" />
                               {{ status.job_expiry }}
                             </VChip>
                           </VCol>
                           <VCol>
+                            <!-- job status -->
                             <VChip variant="tonal" color="success">
                               <VIcon start icon="mdi mdi-currency-inr" />
                               {{ status.job_salary }}
@@ -441,7 +459,7 @@ watch(
       </VRow>
     </VContainer>
 
-    <!-- Apply dialog -->
+    <!-- Apply dialog starts-->
     <v-dialog v-model="applyDialog" max-width="400" persistent>
       <VCard>
         <VCardTitle class="d-flex justify-center">Apply for Job</VCardTitle>
@@ -483,140 +501,151 @@ watch(
         </VCard-actions>
       </VCard>
     </v-dialog>
+    <!-- Apply dialog ends -->
   </VApp>
 </template>
 
+<!-- style -->
 <style scoped>
-/* navbar styling starts */
+/* Navbar styling starts */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #070707;
-  color: white;
+  padding: 0.625rem 1.25rem; 
+  background-color: #070707; /* Very dark background */
+  color: white; /* White text color */
 }
 
+/* Logo span with a specific font size */
 .logo span {
   font-size: 1.2rem;
 }
 
+/* Button styling with margin and padding */
 .links button {
-  margin-left: 10px;
-  padding: 8px 16px;
-  cursor: pointer;
+  margin-left: 0.625rem;
+  padding: 0.5rem 1rem; /* Converted from 8px and 16px (8/16, 16/16) */
+  cursor: pointer; /* Pointer cursor */
 }
-/* navbar styling ends */
+/* Navbar styling ends */
 
-/* vlisting starts */
+/* Company avatar with a circular border */
 .company-avatar {
-  border-radius: 50%;
+  border-radius: 50%; /* Circular border */
 }
 
+/* Company list item with hover transition */
 .company-list-item {
-  transition: background-color 0.3s;
-  padding: 12px 16px;
-  cursor: pointer;
-  align-items: center;
+  transition: background-color 0.3s; /* Smooth transition */
+  padding: 0.75rem 1rem; /* Converted from 12px and 16px (12/16, 16/16) */
+  cursor: pointer; /* Pointer cursor */
+  align-items: center; /* Align vertically */
 }
 
+/* Hover effect for company list item */
 .company-list-item:hover {
-  background-color: #e3f2fd;
+  background-color: #e3f2fd; /* Light blue on hover */
 }
 
+/* Company name with bold font and color transition */
 .company-name {
-  font-weight: bold;
-  color: #3f51b5;
-  padding-left: 10px;
-  transition: all 0.3s;
+  font-weight: bold; /* Bold font weight */
+  color: #3f51b5; /* Blue color */
+  padding-left: 0.625rem;
+  transition: all 0.3s; /* Smooth transition */
 }
 
+/* Title for company with large font size */
 .company-name-title {
-  font-weight: bold;
-  font-size: 35px;
-  color: #070707;
+  font-weight: bold; /* Bold font weight */
+  font-size: 2.1875rem;
+  color: #070707; /* Dark color */
 }
 
+/* Hover effect for company name */
 .company-name:hover {
-  color: #1a237e;
+  color: #1a237e; /* Dark blue on hover */
 }
 
-/* Job list styling */
+/* Job list with padding */
 .job-list {
-  padding: 16px;
+  padding: 1rem;
 }
 
-/* Job cards with subtle hover effect */
+/* Job card with hover effect and border radius */
 .job-card {
-  transition: box-shadow 0.3s;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s; /* Smooth transition */
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); 
 }
 
+/* Hover effect for job card */
 .job-card:hover {
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
-/* Job title with specific color */
+/* Job title with specific color and padding */
 .job-title {
-  color: rgb(53, 46, 53);
-  font-weight: bold;
-  padding-left: 40px;
+  color: rgb(53, 46, 53); /* Custom color */
+  font-weight: bold; /* Bold font weight */
+  padding-left: 2.5rem;
 }
 
-/* Apply button uppercase styling */
+/* Apply button with uppercase text transformation */
 .apply-button {
-  text-transform: uppercase;
-  width: 100vw;
+  text-transform: uppercase; /* Uppercase text */
+  width: 100vw; /* Full viewport width */
 }
 
 /* Job status chips */
 .job-status-card {
-  border-radius: 8px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  background-color: #fafafa;
-  margin-bottom: 16px;
-  text-align: center;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  background-color: #fafafa; /* Light grey */
+  margin-bottom: 1rem; /* Converted from 16px (16/16) */
+  text-align: center; /* Center-align text */
 }
 
 /* Title and subtitle styling */
 .card-title {
-  font-weight: bold;
-  color: #3f51b5;
+  font-weight: bold; /* Bold font weight */
+  color: #3f51b5; /* Blue color */
 }
 
+/* Card subtitle with margin and specific font size */
 .card-subtitle {
-  color: #757575;
-  margin-bottom: 8px;
+  color: #757575; /* Grey color */
+  margin-bottom: 0.5rem;
   font-size: 1.2rem;
-  text-transform: capitalize;
+  text-transform: capitalize; /* Capitalized text */
 }
 
-/* Chip container styling */
+/* Chip container with gap and margin */
 .status-chips {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
+  display: flex; /* Flex layout */
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
-/* Specific chip styling */
+/* Specific chip styling with border radius and padding */
 .status-chip {
-  font-weight: bold;
-  border-radius: 50px;
-  padding: 6px 12px;
+  font-weight: bold; /* Bold font weight */
+  border-radius: 3.125rem; /* Rounded chip */
+  padding: 0.375rem 0.75rem;
 }
 
-/* Chip color adjustments for better visibility */
+/* Chip color adjustments for success, error, and primary colors */
 .status-chip[color="success"] {
-  background-color: #4caf50;
+  background-color: #4caf50; /* Green for success */
 }
 
 .status-chip[color="error"] {
-  background-color: #f44336;
+  background-color: #f44336; /* Red for error */
 }
 
 .status-chip[color="primary"] {
-  background-color: #2196f3;
+  background-color: #2196f3; /* Blue for primary */
 }
 </style>
