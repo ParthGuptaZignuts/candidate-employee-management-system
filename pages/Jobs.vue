@@ -88,7 +88,7 @@ const fetchJobStatus = async () => {
       },
     });
 
-    jobStatus.value = response.data;
+    jobStatus.value = response.data.data;
     console.log(jobStatus.value);
   } catch (error) {
     console.error("Error fetching job status:", error);
