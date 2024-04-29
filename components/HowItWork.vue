@@ -1,12 +1,17 @@
+<!-- template -->
 <template>
   <VRow class="align-items-center">
+    <!-- left side div (Contains the descriptions) -->
     <VCol cols="12" sm="6" class="left-col">
       <div class="content">
+        <!-- heading -->
         <p class="how-it-works">How It Works</p>
+        <!-- title -->
         <h1 class="title">
           QUICK<span> STEPS </span>TO <br />
           GETTING A JOB
         </h1>
+        <!-- description -->
         <p class="description">
           Follow the steps given in the timeline to get your DESIRED job.
         </p>
@@ -79,52 +84,62 @@
   </VRow>
 </template>
 
+<!-- style -->
 <style scoped>
+/* Styling for the left column */
 .left-col {
-  padding: 20px;
+  padding: 1.25rem;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* Styling for the content section */
 .content {
   text-align: center;
 }
 
+/* Styling for 'How It Works' text */
 .how-it-works {
-  font-size: 1.2em;
-  color: #666;
-  font-weight: 500;
+  font-size: 1.2rem;
+  color: #666; /* Grey color */
+  font-weight: 500; /* Medium font weight */
 }
 
+/* Styling for the main title */
 .title {
-  font-size: 2.5em;
-  font-weight: bold;
+  font-size: 2.5rem; /* Originally in em, kept same */
+  font-weight: bold; /* Bold font weight */
 }
 
+/* Title span with special color */
 .title span {
-  color: #ff4081;
+  color: #ff4081; /* Pinkish color */
 }
 
+/* Description styling with additional margin-top */
 .description {
-  font-size: 1em;
-  color: #888;
-  margin-top: 10px;
+  font-size: 1rem; /* Originally in em, kept same */
+  color: #888; /* Light grey color */
+  margin-top: 0.625rem;
 }
 
+/* Flex layout for timeline row */
 .timeline-row {
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
 
+/* Padding for timeline icon */
 .timeline-icon {
-  padding-right: 10px;
+  padding-right: 0.625rem; 
 }
 
+/* Caption text with smaller font size */
 .text-caption {
-  font-size: 0.8em;
-  color: #666;
+  font-size: 0.8rem; 
+  color: #666; /* Grey color */
 }
 </style>

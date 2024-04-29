@@ -1,4 +1,5 @@
 <script setup>
+// neccessary imports
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
@@ -17,6 +18,8 @@ const fetchCompanyNames = async () => {
     isLoading.value = false;
   }
 };
+
+// toast messages
 const showMore = ()=>{
   useNuxtApp().$toast.warning("Please Login to See More...")
 }
@@ -25,8 +28,10 @@ const showMore = ()=>{
 onMounted(fetchCompanyNames);
 </script>
 
+<!-- template -->
 <template>
   <div class="company-container">
+    <!-- heading -->
     <h1 class="text-h4 text-center mb-4 header-title">
       Join Most Well Known <span class="text-primary">Companies</span> Around The World
     </h1>
@@ -82,65 +87,77 @@ onMounted(fetchCompanyNames);
   </div>
 </template>
 
+<!-- style -->
 <style scoped>
 .company-container {
-  background: linear-gradient(to bottom, #e6f3fd, #f5f5f5);
-  padding: 20px;
+  background: linear-gradient(to bottom, #e6f3fd, #f5f5f5); /* Gradient background */
+  padding: 1.25rem;
 }
 
+/* Padding for the loading section */
 .loading-section {
-  padding: 40px 0;
+  padding: 2.5rem 0;
 }
 
+/* Styling for loading text */
 .loading-text {
-  font-size: 1.1em;
-  font-weight: 500;
-  color: #2196f3;
+  font-size: 1.1rem; 
+  font-weight: 500; /* Medium font weight */
+  color: #2196f3; /* Blue color */
 }
 
+/* Card styling with box shadow and transition */
 .card {
-  border-radius: 8px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s;
+  border-radius: 0.5rem; 
+  box-shadow: 0 0.375rem 1rem rgba(0, 0, 0, 0.1); 
+  transition: all 0.3s; /* Transition time */
 }
 
+/* Card hover effect with shadow and translation */
 .card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  transform: translateY(-4px);
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.3); /* Converted from 8px and 20px */
+  transform: translateY(-0.25rem); 
 }
 
+/* Company image transition */
 .company-image {
-  transition: transform 0.3s;
+  transition: transform 0.3s; /* Transition time */
 }
 
+/* Hover effect for company image */
 .company-image:hover {
-  transform: scale(1.1);
+  transform: scale(1.1); /* Scaling on hover */
 }
 
+/* Card title with specific font size and transformation */
 .card-title {
-  font-size: 1.3em;
-  font-weight: bold;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 1.3rem; 
+  font-weight: bold; /* Bold font weight */
+  letter-spacing: 0.05em; 
+  text-transform: uppercase; /* Uppercase transformation */
 }
 
+/* Header title with specific font size and font weight */
 .header-title {
-  font-size: 2em;
-  font-weight: 600;
+  font-size: 2rem; 
+  font-weight: 600; /* Semi-bold font weight */
 }
 
+/* Padding for show-more column */
 .show-more-col {
-  padding-top: 16px;
+  padding-top: 1rem; 
 }
 
+/* Link style for 'show more' with transition */
 .show-more-link {
-  color: #1565c0;
-  text-transform: none;
-  text-decoration: none;
-  transition: color 0.3s;
+  color: #1565c0; /* Blue color */
+  text-transform: none; /* No text transformation */
+  text-decoration: none; /* No underline */
+  transition: color 0.3s; /* Transition time */
 }
 
+/* Hover effect for 'show more' link */
 .show-more-link:hover {
-  color: #0d47a1;
+  color: #0d47a1; /* Darker blue on hover */
 }
 </style>
