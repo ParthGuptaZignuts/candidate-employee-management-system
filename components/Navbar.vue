@@ -92,6 +92,17 @@ const isSignupFormValid = computed(() => {
   );
 });
 
+// move to login and signup page
+const jumpToSignupPage = () => {
+  loginModal.value = false;
+  signupModal.value = true;
+};
+
+const jumpToSignInPage = () => {
+  signupModal.value = false;
+  loginModal.value = true;
+};
+
 // Handle form submissions
 const LoginSubmitForm = async () => {
   try {
@@ -204,6 +215,9 @@ const SignupSubmitForm = async () => {
               <!-- reset button -->
               <VBtn color="grey" class="reset-btn" @click="LoginResetForm"
                 >Reset</VBtn
+              >
+              <VBtn color="primary" class="ml-5" @click="jumpToSignupPage"
+                >Go To Signup Page</VBtn
               >
             </VCol>
           </VRow>
@@ -339,6 +353,9 @@ const SignupSubmitForm = async () => {
               >
               <VBtn color="grey" class="reset-btn" @click="SignupResetForm"
                 >Reset</VBtn
+              >
+              <VBtn color="primary" class="ml-5" @click="jumpToSignInPage"
+                >Go To Sign In Page</VBtn
               >
             </VCol>
           </VRow>
