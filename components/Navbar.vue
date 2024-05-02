@@ -96,11 +96,13 @@ const isSignupFormValid = computed(() => {
 const jumpToSignupPage = () => {
   loginModal.value = false;
   signupModal.value = true;
+  closeLoginModal()
 };
 
 const jumpToSignInPage = () => {
   signupModal.value = false;
   loginModal.value = true;
+  closeSignupModal()
 };
 
 // Handle form submissions
