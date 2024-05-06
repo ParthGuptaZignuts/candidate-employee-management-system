@@ -71,8 +71,13 @@ const fetchCompanyInfo = async () => {
 
 // fetch the jobs with company information
 const fetchJobsWithCompany = async () => {
+  const token = localStorage.getItem("authToken");
   try {
-    const response = await axios.get("/jobsInfo");
+    const response = await axios.get("/jobsInfo", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     jobsOptions.value = response.data.data;
   } catch (error) {
     console.error("Error fetching jobs:", error);
@@ -83,19 +88,27 @@ const fetchJobsWithCompany = async () => {
 const fetchJobStatus = async () => {
   try {
     const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("authToken");
+
     if (!userId) {
       console.error("User ID not found in local storage");
       return;
     }
 
     const response = await axios.get("/jobsStatus", {
+      
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       params: {
         user_id: userId,
       },
+
     });
 
     jobStatus.value = response.data.data;
     console.log(jobStatus.value);
+
   } catch (error) {
     console.error("Error fetching job status:", error);
   }
@@ -283,7 +296,7 @@ onMounted(() => {
                     md="6"
                     lg="4"
                   >
-                  <!-- job title -->
+                    <!-- job title -->
                     <VCard class="job-status-card">
                       <VCardTitle class="card-title">
                         Position Applied For: {{ status.job_title }}
@@ -319,6 +332,14 @@ onMounted(() => {
                           </VCol>
                         </VRow>
                       </VCardSubTitle>
+
+                      <div class="demo-space-x mt-5 text-uppercase">
+                          <VChip 
+                          color="info"
+                          class="status-chip">
+                            <a :href="`http://127.0.0.1:8000/storage/${status.resume}`" target="_blank">View Resume</a>
+                          </VChip>
+                      </div>
 
                       <div class="demo-space-x mt-5 text-uppercase">
                         <!-- Success chip for 'Approved' -->
@@ -512,7 +533,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.625rem 1.25rem; 
+  padding: 0.625rem 1.25rem;
   background-color: #070707; /* Very dark background */
   color: white; /* White text color */
 }
@@ -577,7 +598,7 @@ onMounted(() => {
 .job-card {
   transition: box-shadow 0.3s; /* Smooth transition */
   border-radius: 0.5rem;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
 /* Hover effect for job card */
